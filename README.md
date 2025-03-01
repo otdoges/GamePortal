@@ -38,7 +38,7 @@ A modern web application that combines a game portal with a web proxy service, b
 2. Install the project:
    ```bash
    # Clone or download the repository
-   git clone https://github.com/yourusername/gameportal.git
+   git clone https://github.com/otdoges/gameportal.git
    cd gameportal
 
    # Install dependencies
