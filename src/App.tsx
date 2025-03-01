@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { TowerControl as GameController, Home, Search, Star, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import { TowerControl as GameController, Globe } from 'lucide-react';
 import GameCard from './components/GameCard';
 import FeaturedGame from './components/FeaturedGame';
 import WebProxy from './components/WebProxy';
+import Settings from './components/Settings';
 import { games } from './data/games';
+import { motion,  } from 'framer-motion';
+import { Settings as SettingsIcon } from 'lucide-react';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  // Add state for settings modal
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // Settings state is used in openSettings, closeSettings functions and onClick handler in the header
+  
+  // Settings modal
+  // This function is now directly used in the onClick handler in the header
+  // Function to close settings modal
+  const closeSettings = () => setIsSettingsOpen(false);
+  // Pass this function to the Settings component when implemented
   
   // Persist active tab in localStorage
   const [activeTab, setActiveTab] = useState(() => {
@@ -58,38 +70,13 @@ function App() {
               <Globe size={18} className="mr-2" />
               Web Proxy
             </button>
-          </div>
-          
-          {activeTab === 'games' && (
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search games..."
-                className="bg-gray-700 px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <Search className="absolute right-3 top-2.5 text-gray-400" size={18} />
-            </div>
-          )}
-        </div>
-        
-        {/* Mobile Navigation */}
-        <div className="md:hidden flex justify-center py-2 bg-gray-800 border-t border-gray-700">
-          <div className="flex space-x-4">
+            
             <button 
-              className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'games' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => handleTabChange('games')}
+              className="p-2 rounded-full hover:bg-gray-700"
+              title="Settings"
+              onClick={() => setIsSettingsOpen(true)}
             >
-              <GameController size={18} className="mr-2" />
-              Games
-            </button>
-            <button 
-              className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'proxy' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => handleTabChange('proxy')}
-            >
-              <Globe size={18} className="mr-2" />
-              Web Proxy
+              <SettingsIcon size={20} />
             </button>
           </div>
         </div>
@@ -108,17 +95,17 @@ function App() {
             <section className="mb-8">
               <div className="flex space-x-4 overflow-x-auto pb-2">
                 {categories.map(category => (
-                  <button
+                  <motion.button
                     key={category}
                     className={`px-4 py-2 rounded-full whitespace-nowrap ${
                       activeCategory === category 
                         ? 'bg-purple-600 text-white' 
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        : 'bg-gray-800 text-gray-300'
                     }`}
                     onClick={() => setActiveCategory(category)}
                   >
                     {category}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </section>
