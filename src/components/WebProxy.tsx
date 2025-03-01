@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, RefreshCw, ArrowLeft, ArrowRight, Home, X, AlertTriangle, Globe, Shield } from 'lucide-react';
 
+// Add isHiddenMode state at the top with other state declarations
 const WebProxy: React.FC = () => {
   const [inputUrl, setInputUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,15 @@ const WebProxy: React.FC = () => {
     return localStorage.getItem('proxyCurrentUrl') || '';
   });
   
+  // Add isHiddenMode state
+  const [isHiddenMode, setIsHiddenMode] = useState(() => {
+    try {
+      return localStorage.getItem('proxyHiddenMode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -44,7 +54,8 @@ const WebProxy: React.FC = () => {
     if (currentUrl) {
       localStorage.setItem('proxyCurrentUrl', currentUrl);
     }
-  }, [history, historyIndex, currentUrl]);
+    localStorage.setItem('proxyHiddenMode', isHiddenMode.toString());
+  }, [history, historyIndex, currentUrl, isHiddenMode]);
 
   // Auto-load Google when component mounts
   useEffect(() => {
@@ -81,6 +92,21 @@ const WebProxy: React.FC = () => {
     }
   };
 
+  // Add a toggleHiddenMode function to properly handle about:blank mode
+  const toggleHiddenMode = () => {
+    const newHiddenMode = !isHiddenMode;
+    setIsHiddenMode(newHiddenMode);
+    
+    if (newHiddenMode && iframeRef.current) {
+      iframeRef.current.src = "about:blank";
+    } else if (!newHiddenMode && currentUrl) {
+      const proxyUrl = `/api/proxy?url=${encodeURIComponent(currentUrl)}`;
+      if (iframeRef.current) {
+        iframeRef.current.src = proxyUrl;
+      }
+    }
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -88,12 +114,18 @@ const WebProxy: React.FC = () => {
     
     let processedUrl = inputUrl.trim();
     
-    // Check if the input is a search query or URL
+    // Check for about:blank command
+    if (processedUrl.toLowerCase() === "about:blank") {
+      toggleHiddenMode();
+      return;
+    }
+    
+    // Enhanced search query handling
     if (!processedUrl.includes('.') || processedUrl.includes(' ')) {
-      // Treat as a Google search query
-      processedUrl = `https://www.google.com/search?q=${encodeURIComponent(processedUrl)}`;
+      // Format the search query for Google
+      const searchQuery = encodeURIComponent(processedUrl);
+      processedUrl = `https://www.google.com/search?q=${searchQuery}&hl=en&safe=active`;
     } else if (!processedUrl.startsWith('http://') && !processedUrl.startsWith('https://')) {
-      // Add https:// prefix if missing
       processedUrl = `https://${processedUrl}`;
     }
     
@@ -123,7 +155,6 @@ const WebProxy: React.FC = () => {
       setHistory([...history, processedUrl]);
       setHistoryIndex(historyIndex + 1);
     } else {
-      // If we navigated back and then to a new URL, truncate the forward history
       const newHistory = history.slice(0, historyIndex + 1);
       newHistory.push(processedUrl);
       setHistory(newHistory);
@@ -163,6 +194,7 @@ const WebProxy: React.FC = () => {
       setErrorDetails(null);
       setRetryCount(0);
       setIsRetrying(false);
+      setIsHiddenMode(false); // Exit hidden mode when navigating
       
       // Clear any existing retry timers
       if (retryTimer !== null) {
@@ -188,6 +220,7 @@ const WebProxy: React.FC = () => {
       setErrorDetails(null);
       setRetryCount(0);
       setIsRetrying(false);
+      setIsHiddenMode(false); // Exit hidden mode when navigating
       
       // Clear any existing retry timers
       if (retryTimer !== null) {
@@ -204,6 +237,7 @@ const WebProxy: React.FC = () => {
 
   const handleHome = () => {
     loadHomePage();
+    setIsHiddenMode(false); // Exit hidden mode when going home
   };
 
   const handleClear = () => {
@@ -326,6 +360,7 @@ const WebProxy: React.FC = () => {
     setErrorDetails(null);
     setRetryCount(0);
     setIsRetrying(false);
+    setIsHiddenMode(false); // Exit hidden mode when loading a site
     
     // Clear any existing retry timers
     if (retryTimer !== null) {
@@ -393,6 +428,15 @@ const WebProxy: React.FC = () => {
           title="Home"
         >
           <Home size={18} />
+        </button>
+        
+        {/* Add hidden mode toggle button */}
+        <button 
+          onClick={toggleHiddenMode}
+          className={`p-2 rounded-full ${isHiddenMode ? 'text-purple-400 bg-gray-700' : 'text-gray-300 hover:bg-gray-700'}`}
+          title={isHiddenMode ? "Exit Hidden Mode" : "Enter Hidden Mode (about:blank)"}
+        >
+          <Shield size={18} />
         </button>
         
         <form onSubmit={handleSearch} className="flex-1 relative">

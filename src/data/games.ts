@@ -39,11 +39,11 @@ export const games: Game[] = [
   },
   {
     id: 5,
-    title: "Cut the Rope",
-    description: "Feed candy to Om Nom by cutting ropes and solving physics-based puzzles.",
+    title: "Snake",
+    description: "Control a growing snake, eat food and avoid hitting walls or yourself.",
     thumbnail: "https://images.unsplash.com/photo-1553481187-be93c21490a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://www.crazygames.com/game/cut-the-rope",
-    category: "Puzzle",
+    url: "https://playsnake.org/",
+    category: "Action",
     rating: 4.6
   },
   {
@@ -51,7 +51,7 @@ export const games: Game[] = [
     title: "Slope",
     description: "Control a ball rolling down a slope while avoiding obstacles and gaps.",
     thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://slope-game.com/",
+    url: "https://slope-game.io/",
     category: "Racing",
     rating: 4.4
   },
@@ -60,7 +60,7 @@ export const games: Game[] = [
     title: "Chess",
     description: "The classic strategy board game of kings and queens, now playable online.",
     thumbnail: "https://images.unsplash.com/photo-1586165368502-1bad197a6461?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://www.chess.com/play/computer",
+    url: "https://lichess.org/",
     category: "Strategy",
     rating: 4.8
   },
@@ -78,16 +78,16 @@ export const games: Game[] = [
     title: "Basketball Stars",
     description: "Play basketball against AI or friends in this fast-paced sports game.",
     thumbnail: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://www.crazygames.com/game/basketball-stars",
+    url: "https://www.silvergames.com/en/basketball-stars",
     category: "Sports",
     rating: 4.3
   },
   {
     id: 10,
-    title: "Wordle",
-    description: "Guess the five-letter word in six tries with color-coded hints.",
+    title: "Minesweeper",
+    description: "Clear a minefield without detonating any of the hidden mines.",
     thumbnail: "https://images.unsplash.com/photo-1632854270848-a5a7e2c6cf5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://www.nytimes.com/games/wordle/index.html",
+    url: "https://minesweeper.online/",
     category: "Puzzle",
     rating: 4.7
   },
@@ -102,11 +102,11 @@ export const games: Game[] = [
   },
   {
     id: 12,
-    title: "Mini Metro",
-    description: "Design subway systems for growing cities in this minimalist strategy game.",
+    title: "Geometry Dash",
+    description: "Jump and fly your way through danger in this rhythm-based action platformer.",
     thumbnail: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    url: "https://poki.com/en/g/mini-metro",
-    category: "Strategy",
+    url: "https://www.crazygames.com/game/geometry-dash-online",
+    category: "Action",
     rating: 4.8
   }
 ];
