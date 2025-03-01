@@ -4,9 +4,28 @@ import { Search, RefreshCw, ArrowLeft, ArrowRight, Home, X, AlertTriangle, Globe
 const WebProxy: React.FC = () => {
   const [inputUrl, setInputUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-  const [currentUrl, setCurrentUrl] = useState('');
+  const [history, setHistory] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('proxyHistory');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  
+  const [historyIndex, setHistoryIndex] = useState(() => {
+    try {
+      const saved = localStorage.getItem('proxyHistoryIndex');
+      return saved ? parseInt(saved, 10) : -1;
+    } catch {
+      return -1;
+    }
+  });
+
+  const [currentUrl, setCurrentUrl] = useState(() => {
+    return localStorage.getItem('proxyCurrentUrl') || '';
+  });
+  
   const [error, setError] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -15,6 +34,17 @@ const WebProxy: React.FC = () => {
   const [retryDelay, setRetryDelay] = useState(0);
   const [retryTimer, setRetryTimer] = useState<number | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  // Save state to localStorage when it changes
+  useEffect(() => {
+    if (history.length > 0) {
+      localStorage.setItem('proxyHistory', JSON.stringify(history));
+    }
+    localStorage.setItem('proxyHistoryIndex', historyIndex.toString());
+    if (currentUrl) {
+      localStorage.setItem('proxyCurrentUrl', currentUrl);
+    }
+  }, [history, historyIndex, currentUrl]);
 
   // Auto-load Google when component mounts
   useEffect(() => {
@@ -223,13 +253,13 @@ const WebProxy: React.FC = () => {
                 
                 return;
               }
-            } catch (e) {
+            } catch {
               // Not valid JSON or doesn't have expected structure
             }
           }
         }
       }
-    } catch (e) {
+    } catch {
       // Security error accessing iframe content, which is normal for cross-origin frames
     }
   };
@@ -283,7 +313,7 @@ const WebProxy: React.FC = () => {
     { name: "YouTube", url: "https://www.youtube.com" },
     { name: "Wikipedia", url: "https://www.wikipedia.org" },
     { name: "Reddit", url: "https://www.reddit.com" },
-    { name: "Twitter", url: "https://twitter.com" },
+    { name: "X", url: "https://x.com" },
     { name: "GitHub", url: "https://github.com" },
     { name: "Stack Overflow", url: "https://stackoverflow.com" }
   ];

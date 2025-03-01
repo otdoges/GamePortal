@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TowerControl as GameController, Home, Search, Star, Globe } from 'lucide-react';
 import GameCard from './components/GameCard';
 import FeaturedGame from './components/FeaturedGame';
@@ -8,7 +8,17 @@ import { games } from './data/games';
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [activeTab, setActiveTab] = useState('games'); // 'games' or 'proxy'
+  
+  // Persist active tab in localStorage
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('activeTab') || 'games';
+  });
+  
+  // Update localStorage when tab changes
+  const handleTabChange = (tab: 'games' | 'proxy') => {
+    setActiveTab(tab);
+    localStorage.setItem('activeTab', tab);
+  };
   
   const categories = ['All', 'Action', 'Puzzle', 'Racing', 'Strategy', 'Sports'];
   
@@ -36,14 +46,14 @@ function App() {
           <div className="hidden md:flex space-x-4">
             <button 
               className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'games' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => setActiveTab('games')}
+              onClick={() => handleTabChange('games')}
             >
               <GameController size={18} className="mr-2" />
               Games
             </button>
             <button 
               className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'proxy' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => setActiveTab('proxy')}
+              onClick={() => handleTabChange('proxy')}
             >
               <Globe size={18} className="mr-2" />
               Web Proxy
@@ -69,14 +79,14 @@ function App() {
           <div className="flex space-x-4">
             <button 
               className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'games' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => setActiveTab('games')}
+              onClick={() => handleTabChange('games')}
             >
               <GameController size={18} className="mr-2" />
               Games
             </button>
             <button 
               className={`px-4 py-2 rounded-lg flex items-center ${activeTab === 'proxy' ? 'bg-purple-600' : 'hover:bg-gray-700'}`}
-              onClick={() => setActiveTab('proxy')}
+              onClick={() => handleTabChange('proxy')}
             >
               <Globe size={18} className="mr-2" />
               Web Proxy
