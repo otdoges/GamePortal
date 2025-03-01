@@ -71,6 +71,11 @@ const WebProxy: React.FC = () => {
     };
   }, []);
 
+  const getProxyUrl = (url: string) => {
+    // Use allorigins.win as the proxy service
+    return `/api/proxy?url=${encodeURIComponent(url)}`;
+  };
+
   const loadHomePage = () => {
     const homeUrl = 'https://www.google.com';
     setInputUrl(homeUrl);
@@ -80,7 +85,7 @@ const WebProxy: React.FC = () => {
     setErrorDetails(null);
     setRetryCount(0);
     
-    const proxyUrl = `/api/proxy?url=${encodeURIComponent(homeUrl)}`;
+    const proxyUrl = getProxyUrl(homeUrl);
     if (iframeRef.current) {
       iframeRef.current.src = proxyUrl;
     }
@@ -130,7 +135,7 @@ const WebProxy: React.FC = () => {
     }
     
     // Create the proxy URL
-    const proxyUrl = `/api/proxy?url=${encodeURIComponent(processedUrl)}`;
+    const proxyUrl = getProxyUrl(processedUrl);
     
     setLoading(true);
     setCurrentUrl(processedUrl);

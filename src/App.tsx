@@ -3,7 +3,9 @@ import { TowerControl as GameController, Globe } from 'lucide-react';
 import GameCard from './components/GameCard';
 import FeaturedGame from './components/FeaturedGame';
 import WebProxy from './components/WebProxy';
+/* Put this back when import works 
 import Settings from './components/Settings';
+*/
 import { games } from './data/games';
 import { motion,  } from 'framer-motion';
 import { Settings as SettingsIcon } from 'lucide-react';
@@ -11,16 +13,19 @@ import { Settings as SettingsIcon } from 'lucide-react';
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  // Add state for settings modal
+  /* Add state for settings modal
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  // Settings state is used in openSettings, closeSettings functions and onClick handler in the header
+  Settings state is used in openSettings, closeSettings functions and onClick handler in the header
+  */
+  
   
   // Settings modal
   // This function is now directly used in the onClick handler in the header
   // Function to close settings modal
+  /*
   const closeSettings = () => setIsSettingsOpen(false);
   // Pass this function to the Settings component when implemented
-  
+  */
   // Persist active tab in localStorage
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('activeTab') || 'games';
